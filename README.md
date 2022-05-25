@@ -15,7 +15,7 @@ Some useful commands:
 - A management command for the pokemon app is available to update Pokemon info
     `docker compose exec web python manage.py update_pokemon`
 - List and detail views of the pokemon data held is available at `/pokemon/` and `/pokemon/<id>`
-- Pokemon API access is asynchronous (asyncio and aiohttp) to improve data ingestion speeds.
+- Pokemon API access is asynchronous to improve data ingestion speeds.
 
 
 
@@ -25,3 +25,4 @@ Some useful commands:
 - Make pokemon page sizes configurable
 - Logging
 - Pre-commit hooks to run tests and do some linting
+- Error handling and reporting
