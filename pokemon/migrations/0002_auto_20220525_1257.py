@@ -5,6 +5,9 @@ from django.db import migrations
 from pokemon.pokemon_api import list_pokemon
 
 def populate_pokemon(apps, schema_editor):
+    # This migration assumes there's nothing in the table
+    # Probably won't always be true. Add some checking here
+    # to determine what to do with existing data
     Pokemon = apps.get_model('pokemon', 'Pokemon')
 
     for pokemon_page in list_pokemon():
@@ -12,7 +15,13 @@ def populate_pokemon(apps, schema_editor):
             Pokemon(**pokemon_data)
             for pokemon_data in pokemon_page
         ]
-        Pokemon.objects.bulk_create(pokemon_list) 
+        Pokemon.objects.bulk_create(pokemon_list)
+
+def empty_pokemon(apps, schema_editor):
+    # This rollback will remove ALL data in the table
+    # There should definitely be a warning here.
+    Pokemon = apps.get_model('pokemon', 'Pokemon')
+    Pokemon.objects.all().delete()
 
 
 class Migration(migrations.Migration):
@@ -22,5 +31,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(populate_pokemon)
+        migrations.RunPython(populate_pokemon, empty_pokemon)
     ]
