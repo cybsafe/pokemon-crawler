@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-# Create your tests here.
+
 class TestInitialDataMigration(TestCase):
     # Test migrations work correctly.
     # As migrations run before the test suite, some mocking willl be required
