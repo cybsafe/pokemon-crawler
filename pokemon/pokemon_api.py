@@ -11,7 +11,7 @@ def get_pokemon(pokemon_url):
         "description": get_pokemon_description(data.get("stats"))
     }
 
-# There are only so many characteristics out there. Cache/memoise these
+# There are only so many stats out there. Cache/memoise these
 # for speed improvements
 def get_pokemon_description(stats, language="en"):
     max_stat = max(stats, key=lambda x: x["base_stat"] + x["effort"])
