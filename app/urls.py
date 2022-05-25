@@ -15,9 +15,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
-from pokemon import views
-
 from rest_framework import routers
+
+from pokemon import views
 
 router = routers.DefaultRouter()
 router.register('pokemon', views.PokemonViewSet)
