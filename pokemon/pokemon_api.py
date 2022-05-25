@@ -39,10 +39,9 @@ def get_characteristic_description(characteristic_url, language="en"):
 def list_pokemon():
     # This is all sequential at the moment and very slow.
     # await/async is probably the way forward.
-    data = requests.get(f"https://pokeapi.co/api/v2/pokemon/?limit=1").json()
+    data = requests.get(f"https://pokeapi.co/api/v2/pokemon/").json()
     yield [get_pokemon(pokemon['url']) for pokemon in data['results']]
 
-    # while data['next']:
-    if data['next']:
+    while data['next']:
         data = requests.get(data["next"]).json()
         yield [get_pokemon(pokemon['url']) for pokemon in data['results']]
