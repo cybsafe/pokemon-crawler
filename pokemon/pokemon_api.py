@@ -54,8 +54,6 @@ async def list_pokemon():
             results = await asyncio.gather(*tasks)
             yield results
 
-    # yield [get_pokemon(pokemon['url']) for pokemon in data['results']]
-
         while data['next']:
             async with session.get(data["next"]) as req:
                 data = await req.json()
