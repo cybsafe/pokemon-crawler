@@ -1,0 +1,56 @@
+{% block content %}
+    <h2>You gotta catch them all</h2>
+    {% if pokemons %}
+      <table>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Default</th>
+          <th>Base experience</th>
+          <th>Height</th>
+          <th>Weight</th>
+          <th>Ability</th>
+          <th>Type</th>
+        </tr>
+          {% for pokemon in pokemons %}
+            <tr>
+              <th> {{ pokemon.pokemon_id }}</th>
+              <th> {{ pokemon.name }}</th>
+              <th> {{ pokemon.is_default }}</th>
+              <th> {{ pokemon.base_experience }}</th>
+              <th> {{ pokemon.height }}</th>
+              <th> {{ pokemon.weight }}</th>
+              <th>
+                {% for ability in pokemon.abilities_list %}
+                  {{ ability.name }};
+                {% endfor %}
+              </th>
+              <th>
+                {% for type in pokemon.types_list %}
+                  {{ type.name }};
+                {% endfor %}
+              </th>
+            </tr>
+          {% endfor %}
+        </table>
+      {% else %}
+        <h2>but you have none :/</h2>
+        <button id="post-btn">Catch some</button>
+      {% endif %}
+{% endblock %}
+
+
+<script type="text/javascript">
+  const button = document.getElementById('post-btn');
+
+  button.addEventListener('click', async _ => {
+    try {
+      const response = await fetch('', {
+        method: 'post'
+      });
+      console.log('Completed!', response);
+    } catch(err) {
+      console.error(`Error: ${err}`);
+    }
+  });
+</script>
