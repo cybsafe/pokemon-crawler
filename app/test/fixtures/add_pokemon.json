@@ -1,0 +1,16 @@
+[
+    {
+        "model": "app.Pokemon",
+        "pk": 1,
+        "fields": {
+            "id": 1,
+            "name": "unittesting",
+            "description": "test",
+            "attack": 1,
+            "special_attack": 1,
+            "defense": 1,
+            "weight": 1,
+            "move": "test"
+        }
+    }
+]
