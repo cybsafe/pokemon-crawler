@@ -23,3 +23,10 @@ Some useful commands:
    pre-commit install
    pre-commit install --hook-type commit-msg  # require explicit install, as per https://github.com/compilerla/conventional-pre-commit
    ```
+
+
+Run tests:
+
+```shell
+docker-compose exec web python manage.py test
+```
