@@ -1,19 +1,20 @@
 from django.db import transaction
-from django.http import HttpResponse
-from django.shortcuts import render
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 from django.views import View
 from .models import Pokemon, PokemonAbility, PokemonStats, PokemonType
 import re
 import requests
+from rest_framework.response import Response
+from rest_framework.generics import RetrieveAPIView
+from rest_framework.views import APIView
+
+from .models import Pokemon, PokemonAbility, PokemonType, PokemonStats
+from .serializers import PokemonSerializer
+import logging
 
 
 def home(request):
     return HttpResponse("Gotta Catch 'Em All!")
-
-
-def get_all_pokemons(request):
-    return HttpResponse("This is the get_all_pokemons endpoint")
 
 
 # HELPER FUNCTIONS
@@ -75,7 +76,7 @@ def get_all_pokemon_ids(request) -> list:
 # VIEWS
 
 
-class PokemonDataView(View):
+class PokemonDataUpdateView(View):
     def update_or_create_record(self, request, pokemon_id) -> None:
         """
         Update or create a Pokemon record using data fetched from the PokeAPI.
@@ -100,7 +101,7 @@ class PokemonDataView(View):
 
                 # Update Pokemon abilities
                 for ability_info in pokemon_data["abilities"]:
-                    pokemon_ability, _ = PokemonAbility.objects.update_or_create(
+                    _ = PokemonAbility.objects.update_or_create(
                         ability_name=ability_info["ability"]["name"],
                         defaults={"is_hidden": ability_info["is_hidden"]},
                         pokemon_id=pokemon,
@@ -108,14 +109,14 @@ class PokemonDataView(View):
 
                 # Update Pokemon types
                 for type_info in pokemon_data["types"]:
-                    pokemon_type, _ = PokemonType.objects.update_or_create(
+                    _ = PokemonType.objects.update_or_create(
                         type_name=type_info["type"]["name"],
                         pokemon_id=pokemon,
                     )
 
                 # Update Pokemon stats
                 for stat_info in pokemon_data["stats"]:
-                    pokemon_stat, _ = PokemonStats.objects.update_or_create(
+                    _ = PokemonStats.objects.update_or_create(
                         base_stat_name=stat_info["stat"]["name"],
                         defaults={
                             "effort": stat_info["effort"],
@@ -140,6 +141,16 @@ class PokemonDataView(View):
         self.update_or_create_all(request)
 
         return JsonResponse({"message": "Data update successful."})
-        # Can I have a button to get update
-        # Need to redirect and maybe get a counter
-        # Need to redirect when data is successful
+
+
+class GetAllPokemonsView(APIView):
+    def get(self, request):
+        all_pokemon_names = Pokemon.objects.values_list("pokemon_name", flat=True)
+        sorted_pokemon_names = sorted(all_pokemon_names, key=str.casefold)
+        return Response({"pokemon_names": sorted_pokemon_names})
+
+
+class PokemonDetailsView(RetrieveAPIView):
+    lookup_field = "pokemon_name"
+    queryset = Pokemon.objects.all()
+    serializer_class = PokemonSerializer
